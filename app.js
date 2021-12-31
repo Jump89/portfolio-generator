@@ -20,7 +20,7 @@ return inquirer.prompt([
     {
       type: 'input',
       name: 'github',
-      message: 'What is your GitHub Username',
+      message: 'What is your GitHub Username (Required',
       validate: githubInput => {
         if (githubInput) {
           return true;
@@ -33,20 +33,14 @@ return inquirer.prompt([
     {
       type: 'confirm',
       name: 'confirmAbout',
-      message: 'Would you like to enter some information about yourself for an About section?',
+      message: 'Would you like to enter some information about yourself for an "About" section?',
       default: true
     },
     {
       type: 'input',
       name: 'about',
       massage: ' Provide some information about yourself:',
-      when: ({ confirmAbout }) => {
-        if (confirmAbout) {
-          return true;
-        } else {
-          return false;
-        }
-      }
+      when: ({ confirmAbout }) => confirmAbout
     }
   ]);
 };
@@ -61,11 +55,12 @@ const promptProject = portfolioData => {
   if (!portfolioData.projects) {
     portfolioData.projects = [];
    }
-  return inquirer.prompt ([
+  return inquirer
+  .prompt([
     {
       type: 'input',
       name: 'name',
-      message: 'What is the name of your project?',
+      message: 'What is the name of your project? (Required)',
       validate: nameInput => {
         if (nameInput) {
           return true;
@@ -97,12 +92,12 @@ const promptProject = portfolioData => {
     {
       type: 'input',
       name: 'link',
-      message: 'Enter the GitHub link to your project.(Required)',
+      message: 'Enter the GitHub link to your project. (Required)',
       validate: linkInput => {
         if (linkInput) {
           return true;
         } else {
-          console.log ('Please enter the GitHub Link');
+          console.log ('You need to enter the GitHub Link !');
           return false;
         }
       }
@@ -133,7 +128,12 @@ const promptProject = portfolioData => {
 promptUser()
 .then(promptProject)
 .then(portfolioData => {
-  console.log(portfolioData);
+  const pageHtml = generatePage(portfolioData);
+
+  fs.writeFile('./index.html', pageHtml, err => {
+    if (err) throw new Error(err);
+    console.log('Page created! Check out index.html in this directory to see it!');
+  });
 });
 
 
@@ -149,30 +149,3 @@ promptUser()
 
 
 
-
-
-
-// portfolioData.projects = [];
-//  // if there's no ' projects' array property, create one
-//  if (!portfolioData.projects) {
-//   portfolioData.projects = [];
-//  }
-
-
-
-
-
-
-// // notice the lack of parentheses around profiledataArr parameter?
-// const printProfileData = profileDataArr => {
-//     //This
-//     for (let i = 0; i < profileDataArgs.length; i++) {
-//         console.log(profileDataArr[i]);
-//     }
-//     console.log('===========');
-
-//     // Is the same as this ......
-//     profileDataArr.forEach((profileItem) => console.log(profileItem));
-// };
-
-// printProfileData(profileDataArgs);
